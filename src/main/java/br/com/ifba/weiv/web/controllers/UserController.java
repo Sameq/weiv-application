@@ -33,18 +33,18 @@ public class UserController {
     }
 
     @GetMapping(path = "/findByName", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?>findByName(){
+    public ResponseEntity<?>findByName(@RequestBody @Valid UserGetResponseDto data){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(objectMapperUtil.mapAll(
-                        this.userService.findByName(),
+                        this.userService.findByName(data.getName()),
                         UserGetResponseDto.class));
     }
 
     @GetMapping(path = "/findByEmail", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?>findByEmail(){
+    public ResponseEntity<?>findByEmail(@RequestBody @Valid UserGetResponseDto data){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(objectMapperUtil.mapAll(
-                        this.userService.findByEmail(),
+                        this.userService.findByEmail(data.getEmail()),
                         UserGetResponseDto.class));
     }
 

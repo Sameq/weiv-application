@@ -23,12 +23,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<Users> findByName() {
-        return userRepository.findByName();
+    public List<Users> findByName(String name) {
+        return userRepository.findByName(name);
     }
 
-    public List<Users> findByEmail() {
-        return userRepository.findByEmail();
+    public List<Users> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public Users findById(Long id) {
