@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
 
     public List<Users> findAll() {
@@ -41,7 +41,7 @@ public class UserService {
     }
     @Transactional
     public void updateUser(Users users) {
-             userRepository.save(users);
+        userRepository.save(users);
     }
 
     public Map<String, String> deleteUser(Long id) {

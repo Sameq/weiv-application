@@ -3,23 +3,25 @@ package br.com.ifba.weiv.domain.entity;
 
 
 import br.com.ifba.weiv.web.infrastructure.entity.PersistenceEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Entity
 @Data
+@Setter
+@Getter
 @Table(name="Users")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Users extends PersistenceEntity implements Serializable {
+public class Users  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private long id;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -32,5 +34,13 @@ public class Users extends PersistenceEntity implements Serializable {
 
     @Column(name = "password",nullable = false)
     private String password;
+
+    public Users get() {
+        return Users.this.get();
+    }
+
+    public boolean isPresent() {
+        return true;
+    }
 }
 
