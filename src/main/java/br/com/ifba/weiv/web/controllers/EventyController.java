@@ -2,6 +2,7 @@ package br.com.ifba.weiv.web.controllers;
 
 import br.com.ifba.weiv.domain.dto.EventyCreateDTO;
 import br.com.ifba.weiv.domain.dto.EventyUpdateDTO;
+import br.com.ifba.weiv.domain.dto.EventyViewDTO;
 import br.com.ifba.weiv.domain.entity.Eventy;
 import br.com.ifba.weiv.domain.entity.Users;
 import br.com.ifba.weiv.domain.service.EventyService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/events")
@@ -24,40 +26,50 @@ public class EventyController {
     private UserService userService;
 
     @GetMapping
-    public List<Eventy> getAllEvents() {
-        return eventyService.findAll();
+    public List<EventyViewDTO> getAllEvents() {
+        return eventyService.findAll().stream()
+                .map(this::convertToEventyViewDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Eventy> getEventById(@PathVariable Long id) {
+    public ResponseEntity<EventyViewDTO> getEventById(@PathVariable Long id) {
         return eventyService.findById(id)
-                .map(ResponseEntity::ok)
+                .map(event -> ResponseEntity.ok(convertToEventyViewDTO(event)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/date/{date}")
-    public List<Eventy> getEventsByDate(@PathVariable Date date) {
-        return eventyService.findByDate(date);
+    public List<EventyViewDTO> getEventsByDate(@PathVariable Date date) {
+        return eventyService.findByDate(date).stream()
+                .map(this::convertToEventyViewDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/location/{location}")
-    public List<Eventy> getEventsByLocation(@PathVariable String location) {
-        return eventyService.findByLocation(location);
+    public List<EventyViewDTO> getEventsByLocation(@PathVariable String location) {
+        return eventyService.findByLocation(location).stream()
+                .map(this::convertToEventyViewDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/category/{category}")
-    public List<Eventy> getEventsByCategory(@PathVariable String category) {
-        return eventyService.findByCategory(category);
+    public List<EventyViewDTO> getEventsByCategory(@PathVariable String category) {
+        return eventyService.findByCategory(category).stream()
+                .map(this::convertToEventyViewDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/name/{name}")
-    public List<Eventy> getEventsByName(@PathVariable String name) {
-        return eventyService.findByName(name);
+    public List<EventyViewDTO> getEventsByName(@PathVariable String name) {
+        return eventyService.findByName(name).stream()
+                .map(this::convertToEventyViewDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    public ResponseEntity<Eventy> createEvent(@RequestBody EventyCreateDTO eventyCreateDTO) {
-        Users owner = userService.findById(eventyCreateDTO.getOwnerId());
+    public ResponseEntity<EventyViewDTO> createEvent(@RequestBody EventyCreateDTO eventyCreateDTO) {
+        Optional<Users> owner = Optional.ofNullable(userService.findById(eventyCreateDTO.getOwnerId()));
         if (owner.isPresent()) {
             Eventy eventy = new Eventy();
             eventy.setName(eventyCreateDTO.getName());
@@ -69,28 +81,26 @@ public class EventyController {
             eventy.setCategory(eventyCreateDTO.getCategory());
             eventy.setImage(eventyCreateDTO.getImage());
             Eventy savedEventy = eventyService.save(eventy);
-            return ResponseEntity.ok(savedEventy);
+            return ResponseEntity.ok(convertToEventyViewDTO(savedEventy));
         } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Eventy> updateEvent(@PathVariable Long id, @RequestBody EventyUpdateDTO eventyUpdateDTO) {
+    public ResponseEntity<EventyViewDTO> updateEvent(@PathVariable Long id, @RequestBody EventyUpdateDTO eventyUpdateDTO) {
         return eventyService.findById(id)
                 .map(event -> {
                     event.setName(eventyUpdateDTO.getName());
                     event.setLocation(eventyUpdateDTO.getLocation());
                     event.setDate(eventyUpdateDTO.getDate());
                     event.setHour(eventyUpdateDTO.getHour());
-                    if (eventyUpdateDTO.getOwnerId() != null) {
-                        Users owner = userService.findById(eventyUpdateDTO.getOwnerId());
-                        owner.isPresent();
-                    }
                     event.setDescription(eventyUpdateDTO.getDescription());
                     event.setCategory(eventyUpdateDTO.getCategory());
                     event.setImage(eventyUpdateDTO.getImage());
-                    return ResponseEntity.ok(eventyService.save(event));
+                    Eventy updatedEvent = eventyService.save(event);
+                    return ResponseEntity.ok(convertToEventyViewDTO(updatedEvent));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -103,5 +113,19 @@ public class EventyController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private EventyViewDTO convertToEventyViewDTO(Eventy eventy) {
+        EventyViewDTO dto = new EventyViewDTO();
+        dto.setId(eventy.getId());
+        dto.setName(eventy.getName());
+        dto.setLocation(eventy.getLocation());
+        dto.setDate(eventy.getDate());
+        dto.setHour(eventy.getHour());
+        dto.setOwnerId(eventy.getOwner().getId());
+        dto.setDescription(eventy.getDescription());
+        dto.setCategory(eventy.getCategory());
+        dto.setImage(eventy.getImage());
+        return dto;
     }
 }

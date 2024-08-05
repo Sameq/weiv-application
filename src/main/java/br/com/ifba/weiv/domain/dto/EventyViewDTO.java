@@ -1,6 +1,5 @@
 package br.com.ifba.weiv.domain.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,8 @@ import java.util.Date;
 
 @Setter
 @Getter
-public class EventyCreateDTO {
+public class EventyViewDTO {
+    private Long id;
     private String name;
     private String location;
     private Date date;

@@ -34,13 +34,6 @@ public class Users  {
 
     @Column(name = "password",nullable = false)
     private String password;
-
-    public Users get() {
-        return Users.this.get();
-    }
-
-    public boolean isPresent() {
-        return true;
-    }
+    
 }
 
