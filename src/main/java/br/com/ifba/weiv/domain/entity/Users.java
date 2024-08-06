@@ -5,13 +5,14 @@ package br.com.ifba.weiv.domain.entity;
 import br.com.ifba.weiv.web.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.userdetails.User;
 
 import java.io.Serializable;
 
 @Entity
-@Data
 @Setter
 @Getter
+@Builder
 @Table(name="Users")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,6 +35,6 @@ public class Users  {
 
     @Column(name = "password",nullable = false)
     private String password;
-    
+
 }
 

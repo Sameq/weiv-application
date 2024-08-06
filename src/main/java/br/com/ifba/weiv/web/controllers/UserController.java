@@ -43,13 +43,13 @@ public class UserController {
     @GetMapping(path = "/findByEmail", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?>findByEmail(@RequestBody @Valid UserGetResponseDto data){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(objectMapperUtil.mapAll(
+                .body(objectMapperUtil.map(
                         this.userService.findByEmail(data.getEmail()),
                         UserGetResponseDto.class));
     }
 
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserGetResponseDto> findById(@PathVariable Long id) {
         Users users = userService.findById(id);
             UserGetResponseDto responseDto = objectMapperUtil.map(users, UserGetResponseDto.class);
