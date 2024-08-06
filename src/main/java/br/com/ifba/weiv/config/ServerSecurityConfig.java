@@ -24,7 +24,9 @@ public class ServerSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize->authorize.requestMatchers("/users/auth", "/users/save", "/api/auth/**",
+                .authorizeHttpRequests(authorize->authorize.requestMatchers("/users/auth", "/users/save",
+                        "/events/all", "/events/date/{date}", "/events/location/{location}",
+                        "/events/category/{category}", "/events/name/{name}","/api/auth/**",
                         "/v3/api-docs/**",
                         "/v2/api-docs.yaml",
                         "/swagger-ui/**", "/swagger-ui.html").permitAll())

@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/events")
 public class EventyController {
     @Autowired
     private EventyService eventyService;
@@ -25,7 +25,7 @@ public class EventyController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<EventyViewDTO> getAllEvents() {
         return eventyService.findAll().stream()
                 .map(this::convertToEventyViewDTO)
